@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}About — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section section--navy" style="padding-bottom:60px;">
+  <div class="container">
+    <div class="eyebrow">About us</div>
+    <h1>{{ site_settings.about_title }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--2" style="align-items:center;">
+      <div>
+        {% if site_settings.about_description %}
+          <p style="font-size:1.05rem;color:var(--ink-soft);">{{ site_settings.about_description }}</p>
+        {% else %}
+          <p style="font-size:1.05rem;color:var(--ink-soft);">{{ site_settings.company_name }} is a Caribbean-based technology team providing digital solutions to businesses and organizations — from websites and AI chatbots to business automation and dashboards.</p>
+        {% endif %}
+      </div>
+      {% if site_settings.about_image %}
+      <img src="{{ url_for('static', filename=site_settings.about_image) }}" alt="About {{ site_settings.company_name }}" style="border-radius:var(--radius-lg);">
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section section--dim">
+  <div class="container">
+    <div class="grid grid--3">
+      <div class="card">
+        <h3>Mission</h3>
+        <p>{{ site_settings.mission or "Content coming soon — editable from the admin dashboard." }}</p>
+      </div>
+      <div class="card">
+        <h3>Vision</h3>
+        <p>{{ site_settings.vision or "Content coming soon — editable from the admin dashboard." }}</p>
+      </div>
+      <div class="card">
+        <h3>Values</h3>
+        <p>{{ site_settings.values or "Content coming soon — editable from the admin dashboard." }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container text-center">
+    <div class="eyebrow" style="justify-content:center;">Our focus</div>
+    <h2>Caribbean-rooted, technology-forward</h2>
+    <p style="max-width:600px;margin:0 auto;">We build for businesses across the Caribbean and online, combining modern engineering practices with a real understanding of how our clients operate day to day.</p>
+  </div>
+</section>
+
+{% endblock %}

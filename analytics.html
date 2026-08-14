@@ -1,0 +1,64 @@
+{% extends "admin/base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+{% block admin_content %}
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-card__label">Total Page Views</div>
+    <div class="stat-card__value">{{ total_views }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Project Requests</div>
+    <div class="stat-card__value">{{ total_requests }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Chatbot Conversations</div>
+    <div class="stat-card__value">{{ total_chatbot }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Deal Clicks</div>
+    <div class="stat-card__value">{{ total_deal_clicks }}</div>
+  </div>
+</div>
+
+<div class="grid grid--2" style="align-items:start;">
+  <div class="panel">
+    <div class="panel__head"><h3>Most Viewed Pages</h3></div>
+    {% if top_pages %}
+    <table class="admin-table">
+      <thead><tr><th>Page</th><th>Views</th></tr></thead>
+      <tbody>
+        {% for path, views in top_pages %}
+        <tr><td>{{ path }}</td><td>{{ views }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><p>No page view data yet.</p></div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Most Requested Services</h3></div>
+    {% if requests_by_type %}
+    <table class="admin-table">
+      <thead><tr><th>Type</th><th>Requests</th></tr></thead>
+      <tbody>
+        {% for type_name, count in requests_by_type %}
+        <tr><td>{{ type_name }}</td><td>{{ count }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><p>No request data yet.</p></div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel__head"><h3>Chatbot Insight</h3></div>
+  <p>{{ unanswered_chatbot }} of {{ total_chatbot }} chatbot messages didn't match an existing FAQ. Consider adding responses for common unanswered questions in the Chatbot section.</p>
+</div>
+
+{% endblock %}

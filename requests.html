@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% block title %}Project Requests{% endblock %}
+{% block page_title %}Project Requests{% endblock %}
+{% block admin_content %}
+
+<div class="panel">
+  <form method="GET" class="filter-bar">
+    <input type="text" name="q" placeholder="Search name, business, email..." value="{{ search_q or '' }}">
+    <select name="status">
+      <option value="">All statuses</option>
+      {% for s in status_choices %}
+      <option value="{{ s }}" {{ 'selected' if current_status == s }}>{{ s }}</option>
+      {% endfor %}
+    </select>
+    <select name="priority">
+      <option value="">All priorities</option>
+      {% for p in priority_choices %}
+      <option value="{{ p }}" {{ 'selected' if current_priority == p }}>{{ p }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn--secondary btn--sm">Filter</button>
+    {% if current_status or current_priority or search_q %}
+    <a href="{{ url_for('admin.requests_list') }}" class="btn btn--secondary btn--sm">Clear</a>
+    {% endif %}
+  </form>
+
+  {% if requests %}
+  <table class="admin-table">
+    <thead><tr><th>Name</th><th>Project</th><th>Type</th><th>Budget</th><th>Status</th><th>Priority</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for r in requests %}
+      <tr onclick="window.location='{{ url_for('admin.requests_detail', request_id=r.id) }}'" style="cursor:pointer;">
+        <td>
+          <strong>{{ r.full_name }}</strong>
+          {% if r.business_name %}<div style="color:#8a94a3;font-size:0.8rem;">{{ r.business_name }}</div>{% endif %}
+        </td>
+        <td>{{ r.project_title or '—' }}</td>
+        <td>{{ r.project_type }}</td>
+        <td>{{ r.budget_range or '—' }}</td>
+        <td><span class="badge badge--{{ r.status|lower|replace(' ','-') }}">{{ r.status }}</span></td>
+        <td><span class="badge badge--{{ r.priority|lower }}">{{ r.priority }}</span></td>
+        <td>{{ r.created_at.strftime('%b %d, %Y') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No project requests found</h3><p>Try adjusting your filters, or check back once visitors start submitting requests.</p></div>
+  {% endif %}
+</div>
+
+{% endblock %}

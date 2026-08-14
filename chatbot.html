@@ -1,0 +1,127 @@
+{% extends "admin/base.html" %}
+{% block title %}Chatbot{% endblock %}
+{% block page_title %}Chatbot{% endblock %}
+{% block admin_content %}
+
+<div class="panel">
+  <div class="panel__head"><h3>Chatbot Settings</h3></div>
+  <form method="POST" action="{{ url_for('admin.chatbot_settings') }}" enctype="multipart/form-data">
+    <div class="checkbox-row" style="margin-bottom:20px;">
+      <input type="checkbox" id="is_enabled" name="is_enabled" {{ 'checked' if settings.is_enabled }}>
+      <label for="is_enabled" style="font-weight:600;">Chatbot enabled on the public site</label>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="bot_name">Chatbot name</label>
+        <input type="text" id="bot_name" name="bot_name" value="{{ settings.bot_name }}">
+      </div>
+      <div class="field">
+        <label for="avatar">Avatar image</label>
+        <input type="file" id="avatar" name="avatar" accept=".png,.jpg,.jpeg,.webp">
+      </div>
+      <div class="field field--full">
+        <label for="welcome_message">Welcome message</label>
+        <textarea id="welcome_message" name="welcome_message">{{ settings.welcome_message }}</textarea>
+      </div>
+      <div class="field field--full">
+        <label for="fallback_message">Fallback message <span class="hint">(shown when no FAQ matches)</span></label>
+        <textarea id="fallback_message" name="fallback_message">{{ settings.fallback_message }}</textarea>
+      </div>
+      <div class="field field--full">
+        <label for="suggested_questions">Suggested questions <span class="hint">(one per line)</span></label>
+        <textarea id="suggested_questions" name="suggested_questions" rows="5">{{ settings.suggested_questions }}</textarea>
+      </div>
+    </div>
+    <button type="submit" class="btn btn--primary">Save Chatbot Settings</button>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel__head">
+    <h3>FAQ Responses</h3>
+    <button class="btn btn--primary btn--sm" type="button" data-open-modal="new-faq-modal">+ Add FAQ Response</button>
+  </div>
+
+  {% if faqs %}
+  <table class="admin-table">
+    <thead><tr><th>Trigger keywords</th><th>Label</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for faq in faqs %}
+      <tr>
+        <td style="max-width:260px;">{{ faq.keywords }}</td>
+        <td>{{ faq.question_label or '—' }}</td>
+        <td>{% if faq.is_active %}<span class="badge badge--completed">Active</span>{% else %}<span class="badge badge--low">Disabled</span>{% endif %}</td>
+        <td>
+          <div class="table-actions">
+            <button class="icon-btn" type="button" data-open-modal="edit-faq-{{ faq.id }}" aria-label="Edit">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+            </button>
+            <form method="POST" action="{{ url_for('admin.chatbot_faq_delete', faq_id=faq.id) }}" data-confirm="Delete this FAQ response?">
+              <button class="icon-btn icon-btn--danger" type="submit" aria-label="Delete">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><h3>No FAQ responses yet</h3><p>Add responses so the chatbot can answer common questions.</p></div>
+  {% endif %}
+</div>
+
+<div class="panel">
+  <div class="panel__head"><h3>Recent Conversations <span class="hint">({{ total_conversations }} total)</span></h3></div>
+  {% if recent_logs %}
+  <table class="admin-table">
+    <thead><tr><th>Message</th><th>Matched FAQ</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for log in recent_logs %}
+      <tr>
+        <td>{{ log.user_message }}</td>
+        <td>{% if log.matched_faq_id %}<span class="badge badge--completed">Matched</span>{% else %}<span class="badge badge--low">No match</span>{% endif %}</td>
+        <td>{{ log.created_at.strftime('%b %d, %I:%M %p') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state"><p>No chatbot conversations yet.</p></div>
+  {% endif %}
+</div>
+
+<!-- New FAQ Modal -->
+<div class="modal-backdrop" id="new-faq-modal">
+  <div class="modal">
+    <div class="modal__head"><h3>Add FAQ Response</h3><button class="modal__close" data-close-modal aria-label="Close">&times;</button></div>
+    <form method="POST" action="{{ url_for('admin.chatbot_faq_create') }}">
+      <div class="field"><label>Trigger keywords * <span class="hint">(comma-separated)</span></label><input type="text" name="keywords" placeholder="e.g. pricing, cost, how much" required></div>
+      <div class="field"><label>Suggested question label</label><input type="text" name="question_label" placeholder="Shown as a chip in the chat"></div>
+      <div class="field"><label>Answer *</label><textarea name="answer" required></textarea></div>
+      <div class="checkbox-row" style="margin-bottom:12px;"><input type="checkbox" id="new-faq-cta" name="show_cta"><label for="new-faq-cta" style="font-weight:400;">Show "Start a Project" button with this answer</label></div>
+      <div class="checkbox-row" style="margin-bottom:16px;"><input type="checkbox" id="new-faq-active" name="is_active" checked><label for="new-faq-active" style="font-weight:400;">Active</label></div>
+      <button type="submit" class="btn btn--primary btn--block">Add FAQ</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit FAQ Modals -->
+{% for faq in faqs %}
+<div class="modal-backdrop" id="edit-faq-{{ faq.id }}">
+  <div class="modal">
+    <div class="modal__head"><h3>Edit FAQ Response</h3><button class="modal__close" data-close-modal aria-label="Close">&times;</button></div>
+    <form method="POST" action="{{ url_for('admin.chatbot_faq_edit', faq_id=faq.id) }}">
+      <div class="field"><label>Trigger keywords</label><input type="text" name="keywords" value="{{ faq.keywords }}"></div>
+      <div class="field"><label>Suggested question label</label><input type="text" name="question_label" value="{{ faq.question_label or '' }}"></div>
+      <div class="field"><label>Answer</label><textarea name="answer">{{ faq.answer }}</textarea></div>
+      <div class="checkbox-row" style="margin-bottom:12px;"><input type="checkbox" id="edit-faq-cta-{{ faq.id }}" name="show_cta" {{ 'checked' if faq.show_cta }}><label for="edit-faq-cta-{{ faq.id }}" style="font-weight:400;">Show "Start a Project" button</label></div>
+      <div class="checkbox-row" style="margin-bottom:16px;"><input type="checkbox" id="edit-faq-active-{{ faq.id }}" name="is_active" {{ 'checked' if faq.is_active }}><label for="edit-faq-active-{{ faq.id }}" style="font-weight:400;">Active</label></div>
+      <button type="submit" class="btn btn--primary btn--block">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

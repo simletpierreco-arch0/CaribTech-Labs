@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Request Received — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section" style="padding-top:100px;">
+  <div class="container text-center" style="max-width:560px;">
+    <div class="icon-badge" style="margin:0 auto 20px;width:64px;height:64px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="30" height="30"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1>Thanks, {{ project_request.full_name.split(' ')[0] }}!</h1>
+    <p>Your project request has been received. Our team will review it and get back to you via {{ project_request.preferred_contact_method|lower }} shortly.</p>
+    <div class="card text-center" style="margin-top:28px;">
+      <h4>Request Summary</h4>
+      <p><strong>Project type:</strong> {{ project_request.project_type }}</p>
+      {% if project_request.timeline %}<p><strong>Timeline:</strong> {{ project_request.timeline }}</p>{% endif %}
+      <p><strong>Reference #:</strong> {{ project_request.id }}</p>
+    </div>
+    <a href="{{ url_for('public.home') }}" class="btn btn--secondary" style="margin-top:24px;">Back to Home</a>
+  </div>
+</section>
+
+{% endblock %}

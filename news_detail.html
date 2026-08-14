@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section">
+  <div class="container" style="max-width:760px;">
+    <div class="eyebrow">{{ post.category or 'Update' }}</div>
+    <h1>{{ post.title }}</h1>
+    <p style="color:#8a94a3;font-size:0.9rem;">{{ post.published_at.strftime('%B %d, %Y') if post.published_at }}</p>
+    {% if post.featured_image %}
+    <img src="{{ url_for('static', filename=post.featured_image) }}" alt="{{ post.title }}" style="border-radius:var(--radius-lg);margin:24px 0;width:100%;">
+    {% endif %}
+    <div style="font-size:1.05rem;color:var(--ink-soft);line-height:1.8;white-space:pre-line;">{{ post.content }}</div>
+    <a href="{{ url_for('public.news') }}" class="btn btn--secondary" style="margin-top:32px;">&larr; Back to News</a>
+  </div>
+</section>
+
+{% endblock %}

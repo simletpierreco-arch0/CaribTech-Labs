@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Our Team — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section section--navy" style="padding-bottom:60px;">
+  <div class="container">
+    <div class="eyebrow">Meet the team</div>
+    <h1>The people building {{ site_settings.company_name }}</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--3">
+      {% for member in members %}
+      <div class="card team-card">
+        {% if member.photo_path %}
+        <img src="{{ url_for('static', filename=member.photo_path) }}" alt="{{ member.name }}" class="team-card__photo">
+        {% else %}
+        <div class="team-card__photo-placeholder">{{ member.name[0] }}</div>
+        {% endif %}
+        <div class="team-card__body">
+          <h3>{{ member.name }}</h3>
+          <div class="team-card__position">{{ member.position }}</div>
+          {% if member.bio %}<p>{{ member.bio }}</p>{% endif %}
+          {% if member.skills_list() %}
+          <div class="team-card__skills">
+            {% for skill in member.skills_list() %}<span class="skill-chip">{{ skill }}</span>{% endfor %}
+          </div>
+          {% endif %}
+          {% if member.linkedin_url or member.twitter_url or member.github_url %}
+          <div class="team-card__socials">
+            {% if member.linkedin_url %}<a href="{{ member.linkedin_url }}" target="_blank" rel="noopener" aria-label="{{ member.name }} on LinkedIn">in</a>{% endif %}
+            {% if member.twitter_url %}<a href="{{ member.twitter_url }}" target="_blank" rel="noopener" aria-label="{{ member.name }} on X">x</a>{% endif %}
+            {% if member.github_url %}<a href="{{ member.github_url }}" target="_blank" rel="noopener" aria-label="{{ member.name }} on GitHub">gh</a>{% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <h3>Team profiles coming soon</h3>
+        <p>Add team members from the admin dashboard to have them appear here.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

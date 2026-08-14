@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Start a Project — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section section--navy" style="padding-bottom:56px;">
+  <div class="container">
+    <div class="eyebrow">Start a project</div>
+    <h1>Tell us what you're building</h1>
+    <p style="max-width:560px;">Fill out the form below and our team will follow up about your project.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="max-width:800px;">
+    <form method="POST" enctype="multipart/form-data" class="card" style="padding:36px;">
+
+      <h3 style="margin-bottom:20px;">Contact Information</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="full_name">Full name *</label>
+          <input type="text" id="full_name" name="full_name" required value="{{ form.get('full_name','') }}">
+        </div>
+        <div class="field">
+          <label for="business_name">Business / organization name</label>
+          <input type="text" id="business_name" name="business_name" value="{{ form.get('business_name','') }}">
+        </div>
+        <div class="field">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required value="{{ form.get('email','') }}">
+        </div>
+        <div class="field">
+          <label for="phone">Phone / WhatsApp</label>
+          <input type="tel" id="phone" name="phone" value="{{ form.get('phone','') }}">
+        </div>
+        <div class="field field--full">
+          <label for="preferred_contact_method">Preferred contact method</label>
+          <select id="preferred_contact_method" name="preferred_contact_method">
+            {% for method in contact_methods %}
+            <option value="{{ method }}" {{ 'selected' if form.get('preferred_contact_method') == method }}>{{ method }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <h3 style="margin:28px 0 20px;">Project Information</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="project_type">Type of project *</label>
+          <select id="project_type" name="project_type" required>
+            {% for type in project_types %}
+            <option value="{{ type }}" {{ 'selected' if form.get('project_type') == type }}>{{ type }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="project_title">Project title</label>
+          <input type="text" id="project_title" name="project_title" value="{{ form.get('project_title','') }}">
+        </div>
+        <div class="field field--full">
+          <label for="description">Project description *</label>
+          <textarea id="description" name="description" required>{{ form.get('description','') }}</textarea>
+        </div>
+        <div class="field field--full">
+          <label for="main_goals">Main goals</label>
+          <textarea id="main_goals" name="main_goals">{{ form.get('main_goals','') }}</textarea>
+        </div>
+        <div class="field">
+          <label for="target_audience">Target audience</label>
+          <input type="text" id="target_audience" name="target_audience" value="{{ form.get('target_audience','') }}">
+        </div>
+        <div class="field">
+          <label for="desired_features">Desired features</label>
+          <input type="text" id="desired_features" name="desired_features" value="{{ form.get('desired_features','') }}">
+        </div>
+      </div>
+
+      <h3 style="margin:28px 0 20px;">Budget &amp; Timeline</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="budget_range">Budget range</label>
+          <select id="budget_range" name="budget_range">
+            {% for range in budget_ranges %}
+            <option value="{{ range }}" {{ 'selected' if form.get('budget_range') == range }}>{{ range }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="timeline">Timeline</label>
+          <select id="timeline" name="timeline">
+            {% for t in timelines %}
+            <option value="{{ t }}" {{ 'selected' if form.get('timeline') == t }}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <h3 style="margin:28px 0 20px;">Additional Information</h3>
+      <div class="field">
+        <label for="additional_info">Anything else we should know?</label>
+        <textarea id="additional_info" name="additional_info">{{ form.get('additional_info','') }}</textarea>
+      </div>
+
+      <div class="field">
+        <label for="attachments">Attachments (images, PDFs, documents, briefs)</label>
+        <label class="file-drop" for="attachments" id="file-drop-label">Click to choose files, or drag them here</label>
+        <input type="file" id="attachments" name="attachments" multiple style="display:none;" accept=".png,.jpg,.jpeg,.gif,.webp,.pdf,.doc,.docx,.txt">
+        <span class="hint">Max 10MB per file. Images, PDFs, and documents accepted.</span>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--block" style="margin-top:20px;">Submit Project Request</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

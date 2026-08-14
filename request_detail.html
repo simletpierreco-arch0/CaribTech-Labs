@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+{% block title %}Request from {{ project_request.full_name }}{% endblock %}
+{% block page_title %}Project Request #{{ project_request.id }}{% endblock %}
+{% block admin_content %}
+
+<a href="{{ url_for('admin.requests_list') }}" class="btn btn--secondary btn--sm" style="margin-bottom:20px;">&larr; Back to all requests</a>
+
+<div class="grid grid--2" style="align-items:start;grid-template-columns:1.4fr 1fr;">
+  <div>
+    <div class="panel">
+      <div class="panel__head"><h3>Contact Information</h3></div>
+      <p><strong>Name:</strong> {{ project_request.full_name }}</p>
+      {% if project_request.business_name %}<p><strong>Business:</strong> {{ project_request.business_name }}</p>{% endif %}
+      <p><strong>Email:</strong> <a href="mailto:{{ project_request.email }}">{{ project_request.email }}</a></p>
+      {% if project_request.phone %}<p><strong>Phone:</strong> {{ project_request.phone }}</p>{% endif %}
+      <p><strong>Preferred contact:</strong> {{ project_request.preferred_contact_method }}</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head"><h3>Project Details</h3></div>
+      <p><strong>Type:</strong> {{ project_request.project_type }}</p>
+      {% if project_request.project_title %}<p><strong>Title:</strong> {{ project_request.project_title }}</p>{% endif %}
+      <p><strong>Description:</strong></p>
+      <p style="white-space:pre-line;">{{ project_request.description }}</p>
+      {% if project_request.main_goals %}<p><strong>Main goals:</strong></p><p style="white-space:pre-line;">{{ project_request.main_goals }}</p>{% endif %}
+      {% if project_request.target_audience %}<p><strong>Target audience:</strong> {{ project_request.target_audience }}</p>{% endif %}
+      {% if project_request.desired_features %}<p><strong>Desired features:</strong> {{ project_request.desired_features }}</p>{% endif %}
+      <p><strong>Budget:</strong> {{ project_request.budget_range or '—' }}</p>
+      <p><strong>Timeline:</strong> {{ project_request.timeline or '—' }}</p>
+      {% if project_request.additional_info %}
+      <p><strong>Additional info:</strong></p>
+      <p style="white-space:pre-line;">{{ project_request.additional_info }}</p>
+      {% endif %}
+    </div>
+
+    {% if project_request.files %}
+    <div class="panel">
+      <div class="panel__head"><h3>Attachments</h3></div>
+      <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;">
+        {% for f in project_request.files %}
+        <li>
+          <a href="{{ url_for('static', filename=f.file_path) }}" target="_blank" rel="noopener">
+            {{ f.original_filename or f.filename }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="panel">
+      <div class="panel__head"><h3>Manage Request</h3></div>
+      <form method="POST" action="{{ url_for('admin.requests_update', request_id=project_request.id) }}">
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            {% for s in status_choices %}
+            <option value="{{ s }}" {{ 'selected' if project_request.status == s }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="priority">Priority</label>
+          <select id="priority" name="priority">
+            {% for p in priority_choices %}
+            <option value="{{ p }}" {{ 'selected' if project_request.priority == p }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="internal_notes">Internal notes <span class="hint">(private — never shown publicly)</span></label>
+          <textarea id="internal_notes" name="internal_notes" rows="6">{{ project_request.internal_notes or '' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn--primary btn--block">Save Changes</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <p class="hint">Submitted {{ project_request.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+      <form method="POST" action="{{ url_for('admin.requests_delete', request_id=project_request.id) }}" data-confirm="Delete this project request permanently?">
+        <button type="submit" class="btn btn--danger btn--block">Delete Request</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

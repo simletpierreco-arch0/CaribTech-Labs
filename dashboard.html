@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block admin_content %}
+
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-card__label">Total Requests</div>
+    <div class="stat-card__value">{{ total_requests }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">New Requests</div>
+    <div class="stat-card__value">{{ new_requests }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Active Projects</div>
+    <div class="stat-card__value">{{ active_projects }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Team Members</div>
+    <div class="stat-card__value">{{ team_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Active Deals</div>
+    <div class="stat-card__value">{{ published_deals }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Published Posts</div>
+    <div class="stat-card__value">{{ published_posts }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">Chatbot Conversations</div>
+    <div class="stat-card__value">{{ chatbot_conversations }}</div>
+  </div>
+</div>
+
+<div class="grid grid--2" style="align-items:start;">
+  <div class="panel">
+    <div class="panel__head">
+      <h3>Recent Project Requests</h3>
+      <a href="{{ url_for('admin.requests_list') }}" class="btn btn--secondary btn--sm">View all</a>
+    </div>
+    {% if recent_requests %}
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Type</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+      {% for r in recent_requests %}
+        <tr onclick="window.location='{{ url_for('admin.requests_detail', request_id=r.id) }}'" style="cursor:pointer;">
+          <td>{{ r.full_name }}</td>
+          <td>{{ r.project_type }}</td>
+          <td><span class="badge badge--{{ r.status|lower|replace(' ', '-') }}">{{ r.status }}</span></td>
+          <td>{{ r.created_at.strftime('%b %d') }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><p>No project requests yet.</p></div>
+    {% endif %}
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Most Requested Services</h3></div>
+    {% if type_counts %}
+    <div class="chart-bars">
+      {% set max_count = type_counts|map(attribute=1)|max %}
+      {% for type_name, count in type_counts %}
+      <div class="chart-bar">
+        <div class="chart-bar__fill" style="height: {{ (count / max_count * 150)|round|int }}px;"></div>
+        <div class="chart-bar__label">{{ type_name }}<br><strong>{{ count }}</strong></div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state"><p>No data yet.</p></div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

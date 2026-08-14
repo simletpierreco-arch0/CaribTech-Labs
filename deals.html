@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Deals — {{ site_settings.company_name }}{% endblock %}
+{% block content %}
+
+<section class="section section--navy" style="padding-bottom:60px;">
+  <div class="container">
+    <div class="eyebrow">Deals</div>
+    <h1>Current packages and offers</h1>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--3">
+      {% for deal in deals %}
+      <div class="card deal-card">
+        {% if deal.image_path %}<img src="{{ url_for('static', filename=deal.image_path) }}" alt="{{ deal.title }}" class="deal-card__image">{% endif %}
+        {% if deal.discount_label %}<span class="deal-card__badge">{{ deal.discount_label }}</span>{% endif %}
+        <div class="deal-card__body">
+          <h3>{{ deal.title }}</h3>
+          {% if deal.description %}<p>{{ deal.description }}</p>{% endif %}
+          <div class="deal-card__price">
+            {% if deal.price %}<span class="now">{{ deal.price }}</span>{% endif %}
+            {% if deal.original_price %}<span class="was">{{ deal.original_price }}</span>{% endif %}
+          </div>
+          {% if deal.features_list() %}
+          <ul class="deal-card__features">
+            {% for feature in deal.features_list() %}<li>{{ feature }}</li>{% endfor %}
+          </ul>
+          {% endif %}
+          <a href="{{ url_for('public.request_project') }}" class="btn btn--primary btn--block" data-deal-id="{{ deal.id }}">{{ deal.cta_text }}</a>
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <h3>No active deals right now</h3>
+        <p>Check back soon, or start a project and we'll let you know about anything available.</p>
+        <a href="{{ url_for('public.request_project') }}" class="btn btn--primary" style="margin-top:16px;">Start a Project</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

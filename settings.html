@@ -1,0 +1,174 @@
+{% extends "admin/base.html" %}
+{% block title %}Website Settings{% endblock %}
+{% block page_title %}Website Settings{% endblock %}
+{% block admin_content %}
+
+<form method="POST" enctype="multipart/form-data">
+
+  <div class="panel">
+    <div class="panel__head"><h3>Branding</h3></div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="company_name">Company name</label>
+        <input type="text" id="company_name" name="company_name" value="{{ site.company_name }}">
+      </div>
+      <div class="field">
+        <label for="tagline">Tagline</label>
+        <input type="text" id="tagline" name="tagline" value="{{ site.tagline }}">
+      </div>
+      <div class="field field--full">
+        <label for="logo_upload">Replace logo</label>
+        <input type="file" id="logo_upload" name="logo_upload" accept=".png,.jpg,.jpeg,.svg,.webp">
+        <span class="hint">Current: {{ site.logo_path }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Hero Section</h3></div>
+    <div class="form-grid">
+      <div class="field field--full">
+        <label for="hero_title">Hero title</label>
+        <input type="text" id="hero_title" name="hero_title" value="{{ site.hero_title }}">
+      </div>
+      <div class="field field--full">
+        <label for="hero_subtitle">Hero subtitle</label>
+        <textarea id="hero_subtitle" name="hero_subtitle">{{ site.hero_subtitle }}</textarea>
+      </div>
+      <div class="field">
+        <label for="hero_button_primary">Primary button text</label>
+        <input type="text" id="hero_button_primary" name="hero_button_primary" value="{{ site.hero_button_primary }}">
+      </div>
+      <div class="field">
+        <label for="hero_button_secondary">Secondary button text</label>
+        <input type="text" id="hero_button_secondary" name="hero_button_secondary" value="{{ site.hero_button_secondary }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>About Section</h3></div>
+    <div class="form-grid">
+      <div class="field field--full">
+        <label for="about_title">About title</label>
+        <input type="text" id="about_title" name="about_title" value="{{ site.about_title }}">
+      </div>
+      <div class="field field--full">
+        <label for="about_description">About description</label>
+        <textarea id="about_description" name="about_description">{{ site.about_description }}</textarea>
+      </div>
+      <div class="field">
+        <label for="mission">Mission</label>
+        <textarea id="mission" name="mission">{{ site.mission }}</textarea>
+      </div>
+      <div class="field">
+        <label for="vision">Vision</label>
+        <textarea id="vision" name="vision">{{ site.vision }}</textarea>
+      </div>
+      <div class="field">
+        <label for="values">Values</label>
+        <textarea id="values" name="values">{{ site.values }}</textarea>
+      </div>
+      <div class="field">
+        <label for="about_image_upload">About image</label>
+        <input type="file" id="about_image_upload" name="about_image_upload" accept=".png,.jpg,.jpeg,.webp">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Location &amp; Contact</h3></div>
+    <div class="form-grid">
+      <div class="field field--full">
+        <label for="location">Location</label>
+        <input type="text" id="location" name="location" value="{{ site.location }}">
+      </div>
+      <div class="field">
+        <label for="contact_email">Contact email</label>
+        <input type="email" id="contact_email" name="contact_email" value="{{ site.contact_email or '' }}">
+      </div>
+      <div class="field">
+        <label for="contact_phone">Contact phone</label>
+        <input type="text" id="contact_phone" name="contact_phone" value="{{ site.contact_phone or '' }}">
+      </div>
+      <div class="field">
+        <label for="contact_whatsapp">WhatsApp</label>
+        <input type="text" id="contact_whatsapp" name="contact_whatsapp" value="{{ site.contact_whatsapp or '' }}">
+      </div>
+      <div class="field">
+        <label for="website_url">Website URL</label>
+        <input type="url" id="website_url" name="website_url" value="{{ site.website_url or '' }}">
+      </div>
+      <div class="field field--full">
+        <label for="business_hours">Business hours</label>
+        <input type="text" id="business_hours" name="business_hours" value="{{ site.business_hours or '' }}" placeholder="e.g. Mon-Fri, 9am-5pm AST">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Social Links</h3></div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="social_facebook">Facebook</label>
+        <input type="url" id="social_facebook" name="social_facebook" value="{{ site.social_facebook or '' }}">
+      </div>
+      <div class="field">
+        <label for="social_instagram">Instagram</label>
+        <input type="url" id="social_instagram" name="social_instagram" value="{{ site.social_instagram or '' }}">
+      </div>
+      <div class="field">
+        <label for="social_linkedin">LinkedIn</label>
+        <input type="url" id="social_linkedin" name="social_linkedin" value="{{ site.social_linkedin or '' }}">
+      </div>
+      <div class="field">
+        <label for="social_twitter">X / Twitter</label>
+        <input type="url" id="social_twitter" name="social_twitter" value="{{ site.social_twitter or '' }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Footer &amp; Announcement Bar</h3></div>
+    <div class="form-grid">
+      <div class="field field--full">
+        <label for="footer_text">Footer text</label>
+        <textarea id="footer_text" name="footer_text">{{ site.footer_text }}</textarea>
+      </div>
+      <div class="field field--full">
+        <label for="announcement_bar_text">Announcement bar text</label>
+        <input type="text" id="announcement_bar_text" name="announcement_bar_text" value="{{ site.announcement_bar_text or '' }}">
+      </div>
+      <div class="field field--full checkbox-row">
+        <input type="checkbox" id="announcement_bar_active" name="announcement_bar_active" {{ 'checked' if site.announcement_bar_active }}>
+        <label for="announcement_bar_active" style="font-weight:400;">Show announcement bar on the site</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Theme</h3></div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="theme_primary_color">Primary color (navy)</label>
+        <input type="text" id="theme_primary_color" name="theme_primary_color" value="{{ site.theme_primary_color }}">
+      </div>
+      <div class="field">
+        <label for="theme_accent_color">Accent color (cyan)</label>
+        <input type="text" id="theme_accent_color" name="theme_accent_color" value="{{ site.theme_accent_color }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head"><h3>Maintenance Mode</h3></div>
+    <div class="checkbox-row">
+      <input type="checkbox" id="maintenance_mode" name="maintenance_mode" {{ 'checked' if site.maintenance_mode }}>
+      <label for="maintenance_mode" style="font-weight:400;">Enable maintenance mode (visitors see a maintenance page; admin access stays available)</label>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn--primary">Save Settings</button>
+</form>
+
+{% endblock %}

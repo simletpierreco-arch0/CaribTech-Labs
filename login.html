@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — CaribTech Labs</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body class="login-page">
+  <div class="setup-card">
+    <img src="{{ url_for('static', filename='images/Caribtech_logo.png') }}" alt="CaribTech Labs" class="setup-card__logo" onerror="this.style.display='none'">
+    <h2>Admin Login</h2>
+    <p style="margin-bottom:24px;">Sign in to manage CaribTech Labs.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert--{{ 'error' if category == 'error' else category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="checkbox-row" style="margin-bottom:20px;">
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember" style="font-weight:400;">Keep me signed in</label>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Log In</button>
+    </form>
+  </div>
+</body>
+</html>

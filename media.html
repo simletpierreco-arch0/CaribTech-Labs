@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block title %}Media Library{% endblock %}
+{% block page_title %}Media Library{% endblock %}
+{% block admin_content %}
+
+<div class="panel">
+  <div class="panel__head"><h3>Upload Files</h3></div>
+  <form method="POST" action="{{ url_for('admin.media_upload') }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="field field--full">
+        <label for="files">Select images to upload</label>
+        <input type="file" id="files" name="files" multiple accept=".png,.jpg,.jpeg,.gif,.webp,.svg">
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="general">General</option>
+          <option value="team">Team</option>
+          <option value="service">Service</option>
+          <option value="deal">Deal</option>
+          <option value="post">Post</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="btn btn--primary">Upload</button>
+  </form>
+</div>
+
+<div class="panel">
+  <div class="panel__head"><h3>Library ({{ media_items|length }} files)</h3></div>
+  {% if media_items %}
+  <div class="grid grid--4">
+    {% for item in media_items %}
+    <div class="card" style="padding:12px;">
+      <img src="{{ url_for('static', filename=item.file_path) }}" alt="{{ item.original_filename }}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;margin-bottom:10px;">
+      <div style="font-size:0.78rem;color:#8a94a3;word-break:break-word;margin-bottom:8px;">{{ item.original_filename or item.filename }}</div>
+      <form method="POST" action="{{ url_for('admin.media_delete', media_id=item.id) }}" data-confirm="Delete this file?">
+        <button type="submit" class="btn btn--danger btn--sm btn--block">Delete</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><h3>No media uploaded yet</h3><p>Upload images to use across services, team profiles, deals, and posts.</p></div>
+  {% endif %}
+</div>
+
+{% endblock %}

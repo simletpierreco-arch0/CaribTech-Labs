@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First-Time Setup — CaribTech Labs</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body class="login-page">
+  <div class="setup-card" style="max-width:520px;">
+    <img src="{{ url_for('static', filename='images/Caribtech_logo.png') }}" alt="CaribTech Labs" class="setup-card__logo" onerror="this.style.display='none'">
+    <h2>Create Your Admin Account</h2>
+    <p style="margin-bottom:24px;">This is a one-time setup. Once created, use these credentials to log in at /admin/login.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert--{{ 'error' if category == 'error' else category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="field">
+        <label for="full_name">Full name</label>
+        <input type="text" id="full_name" name="full_name">
+      </div>
+      <div class="field">
+        <label for="username">Username *</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password *</label>
+        <input type="password" id="password" name="password" required minlength="10">
+        <span class="hint">At least 10 characters.</span>
+      </div>
+      <div class="field">
+        <label for="confirm_password">Confirm password *</label>
+        <input type="password" id="confirm_password" name="confirm_password" required minlength="10">
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Create Admin Account</button>
+    </form>
+  </div>
+</body>
+</html>
